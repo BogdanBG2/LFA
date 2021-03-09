@@ -1,0 +1,50 @@
+        Automate & Limbaje Formale
+                Tema 1
+                    Bogdan-Andrei Buga, 322CB
+
+    Pentru inceput, doresc reducerea numarului de coloane a matricei delta pe
+care o voi folosi pentru a rezolva problema de pattern-matching. Intrucat
+pattern-ul citit are maxim 40 de caractere, sunt sanse mari ca unele caractere
+sa apara in cel putin 2 pozitii sau pattern-ul dat sa nu aiba in componenta sa
+alte caractere. De aceea, pentru eficienta spatiala, doresc sa lucrez doar cu
+toate caracterele distincte din pattern.
+
+    Retin matricea delta in forma unui dictionar astfel:
+    - cheia reprezinta lunginea prefixului pe care vrem sa il evaluam;
+    - valoarea este echivalentul liniei de matrice din exemplele din enunt;
+       - aceasta este un dictionar in care cheii C ii atribuim starea in care
+       se va ajunge la evaluarea expresiei (prefix curent) + C.
+
+    In starea 0, atribuim 0 tuturor caracterelor, mai putin primului caracter
+din pattern.
+    Din starea S ajungem in starea S+1 pe caracterul C doar daca prin alipirea
+caracterului C la prefixul pattern-ului de lungime S rezulta prefixul
+pattern-ului de lungime S+1.
+    In caz contrar, se elimina succesiv primul caracter al expresiei curente
+pana cand gasim o expresie corespunzatoare unei stari anterioare (caz in care
+atribum starii curente valoarea starii gasite).
+
+Exemplu: pattern = EZEZ
+delta     E    Z
+0(e)      1    0
+1(E)      1    2
+2(EZ)     3    0
+3(EZE)    1    4
+4(EZEZ)   3    0
+
+In matricea delta, pe pozitia delta[2]['Z'], avem EZZ (nu este prefixul
+pattern-ului de lungime 3) -> ZZ (nu corespunde starii 1) -> Z (corespunde
+starii 0); se obtine delta[2]['Z'] = delta[0]['Z'].
+
+Pe pozitia delta[4]['E'], avem EZEZE -> ZEZE (nu corespunde starii 3) -> EZE
+(corespunde starii 2); se obtine delta[4]['E'] = delta[2]['E'].
+
+    Dupa ce am generat delta(pattern), initializam variabila de stare cu 0
+si luam toate caracterele din textul dat. Actualizam starea la fiecare
+caracter: s -> delta[s][c] (s = starea curenta, c = caracterul curent din text).
+Daca la caracterul i ajungem cu s = numarul total de caractere din pattern, am
+gasit un match de la pozitia (i + 1 - s), pozitie care va fi retinuta intr-o
+lista de rezultate.
+
+    Ultimul pas consta in afisarea in fisier a rezultatelor obtinute cu spatiu
+dupa fiecare si cu endline la sfarsitul fisierului.

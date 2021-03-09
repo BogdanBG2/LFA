@@ -1,0 +1,50 @@
+        Automate & Limbaje Formale
+                Tema 2
+                    Bogdan-Andrei Buga, 322CB
+
+    Pentru inceput, citim si separam toate datele despre automatul finit
+nedeterminist (AFN) din primul fisier.
+    Pentru procesarea datelor in tranzitii, voi folosi un dictionar cu o
+functionalitate similara cu cel din prima tema; mai exact:
+    - cheia reprezinta starea curenta;
+    - valoarea este un dictionar ce contine totalul cailor de acces;
+       - pe valoarea cheii C, ajungem din starea curenta in mai multe stari
+         viitoare stocate intr-un set.
+    Pentru fiecare stare K, trebuie sa adaugam calea K --(eps)--> K daca
+aceasta nu este deja adaugata (eps <==> sirul vid, ''). De asemenea, daca,
+din starea K, mergand pe calea C, nu vom ajunge nicaieri, vom atribui acestui
+"drum" un set gol (echivalentul multimii vide).
+   
+    Pentru calcularea tuturor epsilon-inchiderilor, vom folosi urmatorul
+algoritm:
+        1. e(K) = {a1, a2, ..., aN} (e(K) = epsilon-inchiderea starii K);
+        2. e'(K) = e(a1) | e(a2) | ... | e(aN);
+        3. Daca e'(K) este diferit de e(K), vom repeta pasul 2
+           pentru e(K) = e'(K).
+
+    Plecand de la e(0), vom folosi o lista pentru retinerea starilor
+automatului finit determinist (AFD). Aceasta lista va avea functionalitate de
+coada (First In, First Out); daca din starea curenta gasesc pe orice litera a
+AFN-ului diferita de eps stari viitoare care nu sunt deja in lista, acestea vor
+folosii adaugate la sfarsitul acesteia.
+    Pentru gasiera starii urmatoare S din starea K pe calea C, vom folosi
+urmatorul algoritm:
+        1. K = {k1, k2, ..., kM};
+        2. D = delta-AFN[k1][C] | delta-AFN[k2][C] | ... | delta-AFN[kM][C] = 
+           = {dk1, dk2, ..., dkM};
+        3. delta-AFD[K][C] = delta-AFN[dk1][eps] | ... | delta-AFN[dkM][eps] =
+           = S;
+        4. Daca S nu este in coada, acesta va fi adaugat.
+
+    Pentru a afla care stari din cele gasite sunt stari finale, vom lua fiecare
+stare a AFD-ului si verificam daca aceasta contine o stare finala a AFN-ului.
+
+    Am obtinut un tabel de tranzitii delta-AFD: (set, litera) -> set, dar
+elementele acestuia trebuie afisate ca numere. De aceea, mapam fiecare set
+gasit la indicele acestuia din lista / coada folosita mai devreme si facem
+conversia din set in numar atat a intregului tabel delta-AFD, cat si a tuturor
+starilor finale ale AFD-ului.
+
+    In incheierea programului, vom scrie in al doilea fisier proprietatile
+AFD-ului numeric obtinut: numarul total de stari, starile finale si toate
+tranzitiile acestuia.
